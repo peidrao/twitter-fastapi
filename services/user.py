@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 
-from database.session import Base
+from .base import Base
 from models.user import User
 from utils.hash import Hash
 from schemas.user import UserBase, UserDisplay
