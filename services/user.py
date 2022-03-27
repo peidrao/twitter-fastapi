@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from typing import List, Optional
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -20,6 +21,14 @@ class UserService(Base[User, UserBase]):
         db.add(user)
         db.commit()
         db.refresh(user)
+        return user
+    
+    def get_user_by_username(self, db: Session, username: str) -> User:
+        user = db.query(User).filter(User.username == username).first()
+
+        if not user:
+            raise HTTPException(detail='User not found', status=404)
+        
         return user
 
 
