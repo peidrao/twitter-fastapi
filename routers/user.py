@@ -14,3 +14,9 @@ router = APIRouter()
 async def create_user(request: UserBase, db: Session = Depends(get_db)) -> Any:
     object = user.create(db=db, request=request)
     return object
+
+
+@router.delete('/{id}', response_model=None)
+async def delete(db: Session = Depends(get_db), id=id) -> Any:
+    object = user.delete(db=db, id=id)
+    return object

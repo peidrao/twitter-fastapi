@@ -1,5 +1,6 @@
 from http.client import HTTPException
 from typing import List, Optional
+from fastapi import Response, status
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
@@ -22,6 +23,18 @@ class UserService(Base[User, UserBase]):
         db.commit()
         db.refresh(user)
         return user
+
+    def delete(self, db: Session, id: int) -> User:
+        user = db.query(User).filter(User.id == id).first()
+        if user: 
+            user.is_active= False  
+            db.commit()  
+            db.refresh(user)
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+        
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        
+
     
     def get_user_by_username(self, db: Session, username: str) -> User:
         user = db.query(User).filter(User.username == username).first()
