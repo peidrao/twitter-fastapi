@@ -1,5 +1,6 @@
 from lib2to3.pytree import Base
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserBase(BaseModel):
@@ -9,8 +10,8 @@ class UserBase(BaseModel):
 
 
 class UserDisplay(BaseModel):
-    username: str
-    email: str
+    username: Optional[str]
+    email: Optional[str]
 
     class Config:
         orm_mode = True
