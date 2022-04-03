@@ -8,7 +8,7 @@ class Tweet(SQLModel, table=True):
     text: str
 
     is_active: Optional[bool] = Field(default=True)
-    created_at: Optional[datetime] = Field(default=datetime.utcnow)
-    updated_at: Optional[datetime] = Field(default=datetime.utcnow)
+    created_at: Optional[datetime] = Field(default=datetime.utcnow())
+    updated_at: Optional[datetime] = Field(default=datetime.utcnow())
     
     user: Optional[int] = Field(default=None, foreign_key="user.id")
