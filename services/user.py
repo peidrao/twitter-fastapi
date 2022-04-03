@@ -1,7 +1,4 @@
-from http.client import HTTPException
-from typing import List, Optional
-from fastapi import Response, status
-from fastapi.encoders import jsonable_encoder
+from fastapi import Response, status, HTTPException
 from sqlmodel import Session
 
 from models.user import User
@@ -46,6 +43,16 @@ class UserService:
             raise HTTPException(detail='User not found', status=404)
         
         return user
+    
+    def get_user_by_id(self, db: Session, id: int) -> User:
+        user = db.query(User).filter(User.id == id).first()
+
+        if not user:
+            return False
+        
+        return user
+
+    
 
 
 
