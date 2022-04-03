@@ -5,7 +5,6 @@ from typing import Optional
 
 class TweetBase(BaseModel):
     text: str
-    user: int
 
 
 class TweetDisplay(BaseModel):

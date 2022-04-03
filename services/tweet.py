@@ -4,14 +4,15 @@ from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session
 
 from models import Tweet
+from schemas.user import UserAuth
 
 from services.user import user as user_service
 from schemas.tweet import TweetBase, TweetDisplay
 
 
 class TweetService:
-    def create(self, db: Session, request: TweetBase) -> Tweet:
-        user = user_service.get_user_by_id(db, request.user)
+    def create(self, db: Session, request: TweetBase, request_user: UserAuth) -> Tweet:
+        user = user_service.get_user_by_id(db, request_user['id'])
         if user:
             tweet = Tweet(
                 text=request.text,
