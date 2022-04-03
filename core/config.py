@@ -11,5 +11,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = 'HS256'
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    PORT: int = 8000
+    DEBUG: bool = True
+    HOST: str = 'localhost'
 
 settings = Settings()
