@@ -8,37 +8,37 @@ from typing import Optional
 from jose import jwt, JWTError
 
 from core.config import settings
-from database.db import get_db
+# from database.db import get_db
 from services.user import user
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
 
-def create_access_token(request: dict, expires_delta: Optional[timedelta] = None):
-    encode = request.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    encode.update({'expire': jsonable_encoder(expire)})
+# def create_access_token(request: dict, expires_delta: Optional[timedelta] = None):
+#     encode = request.copy()
+#     if expires_delta:
+#         expire = datetime.utcnow() + expires_delta
+#     else:
+#         expire = datetime.utcnow() + timedelta(minutes=15)
+#     encode.update({'expire': jsonable_encoder(expire)})
 
-    encoded_jwt = jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-    return encoded_jwt
+#     encoded_jwt = jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+#     return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(status=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials.')
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        username: str = payload.get('username')
-        if not username:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
+# def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+#     credentials_exception = HTTPException(status=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials.')
+#     try:
+#         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+#         username: str = payload.get('username')
+#         if not username:
+#             raise credentials_exception
+#     except JWTError:
+#         raise credentials_exception
     
-    current_user = user.get_user_by_username(db, username)
+#     current_user = user.get_user_by_username(db, username)
 
-    if not current_user:
-        raise credentials_exception
+#     if not current_user:
+#         raise credentials_exception
     
-    return current_user
+#     return current_user
