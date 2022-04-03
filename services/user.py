@@ -2,10 +2,8 @@ from http.client import HTTPException
 from typing import List, Optional
 from fastapi import Response, status
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
-
-# from .base import Base
 from models.user import User
 from utils.hash import Hash
 from schemas.user import UserBase, UserDisplay
@@ -14,6 +12,8 @@ from schemas.user import UserBase, UserDisplay
 class UserService:
     def create(self, db: Session, request: UserBase) -> User:
         user = User(
+            name=request.name,
+            birthday=request.birthday,
             username=request.username,
             email=request.email,
             password=Hash.bcrypt(request.password)
