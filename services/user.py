@@ -5,13 +5,13 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 
-from .base import Base
+# from .base import Base
 from models.user import User
 from utils.hash import Hash
 from schemas.user import UserBase, UserDisplay
 
 
-class UserService(Base[User, UserBase]):
+class UserService:
     def create(self, db: Session, request: UserBase) -> User:
         user = User(
             username=request.username,
@@ -49,4 +49,4 @@ class UserService(Base[User, UserBase]):
 
 
 
-user = UserService(User)
+user = UserService()
