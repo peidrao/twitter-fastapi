@@ -46,6 +46,7 @@ Pygments==2.11.2
 pyparsing==3.0.7
 pyperclip==1.8.2
 python-jose==3.3.0
+python-multipart==0.0.5
 python-secrets==22.1.0
 pytz==2022.1
 PyYAML==6.0
@@ -64,6 +65,8 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
 SQLAlchemy==1.4.32
+sqlalchemy2-stubs==0.0.2a21
+sqlmodel==0.0.6
 starlette==0.17.1
 stevedore==3.5.0
 tomli==2.0.1
