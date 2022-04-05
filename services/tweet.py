@@ -26,16 +26,17 @@ class TweetService:
     
         raise HTTPException(detail='User not exists', status_code=404)
 
-
-    # def delete(self, db: Session, id: int) -> User:
-    #     user = db.query(User).filter(User.id == id).first()
-    #     if user: 
-    #         user.is_active= False
-    #         db.commit()  
-    #         db.refresh(user)
-    #         return Response(status_code=status.HTTP_204_NO_CONTENT)
+    def delete(self, db: Session, id: int, request_user: UserAuth) -> Tweet:
+        user = user_service.get_user_by_id(db, request_user['id'])
+        tweet = db.query(Tweet).filter(Tweet.id == id).first()
         
-    #     return Response(status_code=status.HTTP_404_NOT_FOUND)
+        if user.id == tweet.user:
+            tweet.is_active = False
+            db.commit()  
+            db.refresh(user)
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
     
     # def get_all(self, db: Session) -> User:
     #     users = db.query(User).filter(User.is_active == True).all()
