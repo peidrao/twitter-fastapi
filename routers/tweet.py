@@ -18,11 +18,11 @@ async def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_
         object = tweet.create(db=session, request=request, request_user=request_user)
         return object
 
-# @router.delete('/{id}', response_model=None)
-# async def delete(id=id) -> Any:
-#     with Session(engine) as session:
-#         object = user.delete(db=session, id=id)
-#         return object
+@router.delete('/{id}', response_model=None)
+async def delete(id=id, request_user: UserAuth = Depends(get_current_user)) -> Any:
+    with Session(engine) as session:
+        object = tweet.delete(db=session, id=id, request_user=request_user)
+        return object
 
 # @router.get('/', response_model=List[TweetDisplay])
 # async def get_users() -> Any:
