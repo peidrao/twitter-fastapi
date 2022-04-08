@@ -42,14 +42,11 @@ class TweetService:
         tweets = db.query(Tweet).filter(Tweet.is_active == True).all()
 
         return tweets
+    
+    def get_tweet_by_id(self, db: Session, id: int) -> Tweet:
+        tweet = db.query(Tweet).filter(Tweet.id == id).first()
 
-    # def get_user_by_username(self, db: Session, username: str) -> User:
-    #     user = db.query(User).filter(User.username == username).first()
-
-    #     if not user:
-    #         raise HTTPException(detail='User not found', status=404)
-        
-    #     return user
+        return tweet
 
 
 
