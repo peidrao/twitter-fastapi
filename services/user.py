@@ -1,5 +1,6 @@
 from fastapi import Response, status, HTTPException
 from sqlmodel import Session
+from models.tweet import Tweet
 
 from models.user import User
 from utils.hash import Hash
@@ -52,7 +53,17 @@ class UserService:
         
         return user
 
-    
+    def get_profile(self, db: Session, username: str) -> User:
+        user = db.query(User).filter(User.username == username).first()
+        tweet = db.query(Tweet).filter(Tweet.user == user.id).count()
+        user = user.dict()
+        user.update(count=tweet)
+        return user
+
+
+
+
+
 
 
 

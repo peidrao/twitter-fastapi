@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel
 from typing import Optional
 
@@ -11,12 +11,26 @@ class UserBase(BaseModel):
     password: str
 
 
+
 class UserDisplay(BaseModel):
     username: Optional[str]
     email: Optional[str]
 
     class Config:
         orm_mode = True
+
+
+class UserProfileDisplay(BaseModel):
+    username: Optional[str]
+    email: Optional[str]
+    birthday: Optional[date]
+    name: Optional[str]
+    created_at: Optional[datetime]
+    count: Optional[int]
+
+    class Config:
+        orm_mode = True
+
 
 
 class UserAuth(BaseModel):
