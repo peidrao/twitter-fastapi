@@ -24,7 +24,7 @@ async def delete(id=id, request_user: UserAuth = Depends(get_current_user)) -> A
         object = tweet.delete(db=session, id=id, request_user=request_user)
         return object
 
-# @router.get('/', response_model=List[TweetDisplay])
-# async def get_users() -> Any:
-#     with Session(engine) as session:
-#         return user.get_all(db=session)
+@router.get('/', response_model=List[TweetDisplay])
+async def get_tweets() -> Any:
+    with Session(engine) as session:
+        return tweet.get_all(db=session)

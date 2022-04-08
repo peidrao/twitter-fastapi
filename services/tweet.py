@@ -38,10 +38,10 @@ class TweetService:
 
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     
-    # def get_all(self, db: Session) -> User:
-    #     users = db.query(User).filter(User.is_active == True).all()
+    def get_all(self, db: Session) -> Tweet:
+        tweets = db.query(Tweet).filter(Tweet.is_active == True).all()
 
-    #     return users
+        return tweets
 
     # def get_user_by_username(self, db: Session, username: str) -> User:
     #     user = db.query(User).filter(User.username == username).first()
