@@ -10,6 +10,7 @@ from schemas.like import LikeBase
 
 from services.user import user as user_service
 from schemas.retweet import RetweetBase
+from utils.tweet_addons import get_tweet_actions
 
 
 class RetweetService:
@@ -45,12 +46,7 @@ class RetweetService:
 
     def get_retweets_by_tweet(self, db: Session, id: int, request_user: UserAuth) -> Retweet:
         retweets = db.query(Retweet).filter(Retweet.tweet == id, Retweet.is_active == True).all()
-        json = []
-        for retweet in retweets:
-            retweet = retweet.dict()
-            user = db.query(User).filter(User.id == retweet['user']).first()
-            retweet.update(username=user.username)
-            json.append(retweet)
-        return json
+        return get_tweet_actions(retweets, db)
+
 
 retweet = RetweetService()

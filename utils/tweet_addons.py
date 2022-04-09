@@ -1,8 +1,9 @@
 
-from typing import Dict
+from typing import Any, Dict, List
 
 from sqlmodel import Session
 from models.tweet import Like, Retweet, Tweet
+from models.user import User
 
 
 def tweet_count(tweet: Tweet, db: Session) -> Dict:
@@ -12,3 +13,13 @@ def tweet_count(tweet: Tweet, db: Session) -> Dict:
     tweet.update(likes=likes, retweets=retweets)
 
     return tweet
+
+
+def get_tweet_actions(actions: Like | Retweet, db: Session) -> List:
+    json = []
+    for action in actions:
+        action = action.dict()
+        user = db.query(User).filter(User.id == action['user']).first()
+        action.update(username=user.username)
+        json.append(action)
+    return json
