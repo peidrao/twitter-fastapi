@@ -23,7 +23,7 @@ def create_access_token(request: dict, expires_delta: Optional[timedelta] = None
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    encode.update({'exp': jsonable_encoder(expire)})
+    encode.update({'expire': jsonable_encoder(expire)})
 
     encoded_jwt = jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
@@ -32,7 +32,6 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     with Session(engine) as session:
         credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials.')
         try:
-           
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
             username: str = payload.get('username')
             if not username:
