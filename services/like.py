@@ -14,10 +14,22 @@ from services.user import user as user_service
 class LikeService:
     def create(self, db: Session, request: LikeBase, request_user: UserAuth) -> Like:
         user = user_service.get_user_by_id(db, request_user['id'])
+        
+        like = db.query(Like).filter(Like.id == request.tweet, Like.user == user.id).first()
+
+        if like:
+            if not like.is_active:
+                like.is_active = True
+            else:
+                like.is_active = False
+            db.commit()
+            db.refresh(like)
+            return like
+
         if user:
             like = Like(
                 user=user.id,
-                tweet=request['tweet']
+                tweet=request.tweet
             )
 
             db.add(like)
