@@ -26,7 +26,7 @@ class UserProfileDisplay(BaseModel):
     birthday: Optional[date]
     name: Optional[str]
     created_at: Optional[datetime]
-    count: Optional[int]
+    tweets_count: Optional[int]
 
     class Config:
         orm_mode = True
