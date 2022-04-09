@@ -24,12 +24,19 @@ async def login(request: OAuth2PasswordRequestForm = Depends()):
                                 status_code=status.HTTP_404_NOT_FOUND)
 
         access_token = create_access_token(request={'username': user.username})
+        
+        if not user.is_active:
+            user.is_active = True
+            session.commit()
+            session.refresh(user)
+
 
         return {
             'access_token': access_token,
             'token_type': 'bearer',
             'user_id': user.id,
             'username': user.username,
-            'email': user.email
+            'email': user.email,
+            'is_active': user.is_active
         }
 
