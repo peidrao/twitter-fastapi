@@ -11,7 +11,6 @@ class UserBase(BaseModel):
     password: str
 
 
-
 class UserDisplay(BaseModel):
     username: Optional[str]
     email: Optional[str]
@@ -30,7 +29,6 @@ class UserProfileDisplay(BaseModel):
 
     class Config:
         orm_mode = True
-
 
 
 class UserAuth(BaseModel):
