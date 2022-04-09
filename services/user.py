@@ -57,13 +57,8 @@ class UserService:
         user = db.query(User).filter(User.username == username).first()
         tweet = db.query(Tweet).filter(Tweet.user == user.id).count()
         user = user.dict()
-        user.update(count=tweet)
+        user.update(tweets_count=tweet)
         return user
-
-
-
-
-
 
 
 

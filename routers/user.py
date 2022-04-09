@@ -1,7 +1,6 @@
 from typing import Any, List, Union
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
-from schemas.tweet import TweetDisplayCount
 
 from schemas.user import UserDisplay, UserBase, UserProfileDisplay
 from services.user import user
