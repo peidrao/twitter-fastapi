@@ -1,8 +1,9 @@
 from typing import Any, List, Union
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
+from authentication.oauth import get_current_user
 
-from schemas.user import UserDisplay, UserBase, UserProfileDisplay
+from schemas.user import UserAuth, UserDisplay, UserBase, UserProfileDisplay
 from services.user import user
 from database.session import engine
 
@@ -32,3 +33,9 @@ async def get_users() -> Any:
 async def get_profile(username: str) -> Any:
     with Session(engine) as session:
         return user.get_profile(db=session, username=username)
+
+
+@router.patch('/deactivate/')
+async def deactivate(request_user: UserAuth = Depends(get_current_user)) -> Any:
+    with Session(engine) as session:
+        return user.deactivate_account(db=session, request_user=request_user)

@@ -1,10 +1,11 @@
 from fastapi import Response, status, HTTPException
+from requests import request
 from sqlmodel import Session
 from models.tweet import Tweet
 
 from models.user import User
 from utils.hash import Hash
-from schemas.user import UserBase, UserDisplay
+from schemas.user import UserAuth, UserBase, UserDisplay
 
 
 class UserService:
@@ -25,7 +26,7 @@ class UserService:
     def delete(self, db: Session, id: int) -> User:
         user = db.query(User).filter(User.id == id).first()
         if user: 
-            user.is_active= False
+            user.is_active = False
             db.commit()  
             db.refresh(user)
             return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -38,7 +39,7 @@ class UserService:
         return users
 
     def get_user_by_username(self, db: Session, username: str) -> User:
-        user = db.query(User).filter(User.username == username).first()
+        user = db.query(User).filter(User.username == username, User.is_active == True).first()
 
         if not user:
             raise HTTPException(detail='User not found', status=404)
@@ -46,7 +47,7 @@ class UserService:
         return user
     
     def get_user_by_id(self, db: Session, id: int) -> User:
-        user = db.query(User).filter(User.id == id).first()
+        user = db.query(User).filter(User.id == id, User.is_active == True).first()
 
         if not user:
             return False
@@ -60,6 +61,15 @@ class UserService:
         user.update(tweets_count=tweet)
         return user
 
+    def deactivate_account(self, db: Session, request_user: UserAuth) -> User:
+        user = db.query(User).filter(User.id == request_user['id'], User.is_active == True).first()
 
+        if user:
+            user.is_active = False
+            db.commit()  
+            db.refresh(user)
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+        
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
 
 user = UserService()
