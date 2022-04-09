@@ -4,6 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session
 
 from models import Tweet, Like, Retweet
+from models.user import User
 from schemas.user import UserAuth
 from schemas.like import LikeBase
 
@@ -12,7 +13,7 @@ from schemas.retweet import RetweetBase
 
 
 class RetweetService:
-    def create(self, db: Session, request: RetweetBase, request_user: UserAuth) -> Like:
+    def create(self, db: Session, request: RetweetBase, request_user: UserAuth) -> Retweet:
         user = user_service.get_user_by_id(db, request_user['id'])
         
         retweet = db.query(Retweet).filter(Retweet.tweet == request.tweet, Retweet.user == user.id).first()
@@ -41,5 +42,15 @@ class RetweetService:
             return retweet
     
         raise HTTPException(detail='User not exists', status_code=404)
+
+    def get_retweets_by_tweet(self, db: Session, id: int, request_user: UserAuth) -> Retweet:
+        retweets = db.query(Retweet).filter(Retweet.tweet == id, Retweet.is_active == True).all()
+        json = []
+        for retweet in retweets:
+            retweet = retweet.dict()
+            user = db.query(User).filter(User.id == retweet['user']).first()
+            retweet.update(username=user.username)
+            json.append(retweet)
+        return json
 
 retweet = RetweetService()

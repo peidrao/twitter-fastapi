@@ -2,10 +2,13 @@ from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 from authentication.oauth import get_current_user
+from schemas.retweet import RetweetDisplay
 
 from schemas.tweet import TweetDisplay, TweetBase
 from schemas.user import UserAuth, UserDisplay
+
 from services.tweet import tweet
+from services.retweet import retweet
 from database.session import engine
 
 
@@ -33,3 +36,10 @@ async def get_tweets() -> Any:
 async def get_tweet(id: int = id) -> Any:
     with Session(engine) as session:
         return tweet.get_tweet_by_id(db=session, id=id)
+
+
+@router.get('/retweets/{id_tweet}', response_model=List[RetweetDisplay])
+async def create_retweet(id_tweet: int, request_user: UserAuth = Depends(get_current_user)) -> Any:
+    with Session(engine) as session:
+        object = retweet.get_retweets_by_tweet(db=session, id=id_tweet, request_user=request_user)
+        return object
