@@ -4,11 +4,12 @@ from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session
 
 from models import Tweet
-from models.tweet import Like
+from models.tweet import Like, Retweet
 from schemas.user import UserAuth
 
 from services.user import user as user_service
 from schemas.tweet import TweetBase, TweetDisplay
+from utils.tweet_addons import tweet_count
 
 
 class TweetService:
@@ -41,19 +42,15 @@ class TweetService:
     
     def get_all(self, db: Session) -> Tweet:
         tweets = db.query(Tweet).filter(Tweet.is_active == True).all()
-
         json = []
         for tweet in tweets:
-            tweet = tweet.dict()
-            likes = db.query(Like).filter(Like.id == tweet['id'], Like.is_active == True).count()
-            tweet.update(likes=likes)
-            json.append(tweet)
+            json.append(tweet_count(tweet, db))
         return json
 
     
     def get_tweet_by_id(self, db: Session, id: int) -> Tweet:
         tweet = db.query(Tweet).filter(Tweet.id == id).first()
-
+        tweet = tweet_count(tweet, db)
         return tweet
 
 
