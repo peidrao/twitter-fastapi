@@ -1,10 +1,7 @@
-from typing import List, Optional
 from fastapi import Response, status, HTTPException
-from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session
 
 from models import Tweet
-from models.tweet import Like, Retweet
 from schemas.user import UserAuth
 
 from services.user import user as user_service
@@ -52,7 +49,6 @@ class TweetService:
         tweet = db.query(Tweet).filter(Tweet.id == id).first()
         tweet = tweet_count(tweet, db)
         return tweet
-
 
 
 tweet = TweetService()
