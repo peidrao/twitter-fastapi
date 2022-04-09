@@ -18,12 +18,6 @@ async def create_user(request: UserBase) -> Any:
         object = user.create(db=session, request=request)
         return object
 
-@router.delete('/{id}', response_model=None)
-async def delete(id: int) -> Any:
-    with Session(engine) as session:
-        object = user.delete(db=session, id=id)
-        return object
-
 @router.get('/', response_model=List[UserDisplay])
 async def get_users() -> Any:
     with Session(engine) as session:

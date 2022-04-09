@@ -22,16 +22,6 @@ class UserService:
         db.commit()
         db.refresh(user)
         return user
-
-    def delete(self, db: Session, id: int) -> User:
-        user = db.query(User).filter(User.id == id).first()
-        if user: 
-            user.is_active = False
-            db.commit()  
-            db.refresh(user)
-            return Response(status_code=status.HTTP_204_NO_CONTENT)
-        
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
     
     def get_all(self, db: Session) -> User:
         users = db.query(User).filter(User.is_active == True).all()
