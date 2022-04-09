@@ -10,6 +10,7 @@ class TweetBase(BaseModel):
 class TweetDisplay(BaseModel):
     id: Optional[int]
     likes: Optional[int]
+    retweets: Optional[int]
     text: Optional[str]
     user: Optional[int]
     created_at: datetime
