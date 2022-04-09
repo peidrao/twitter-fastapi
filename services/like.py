@@ -15,13 +15,14 @@ class LikeService:
     def create(self, db: Session, request: LikeBase, request_user: UserAuth) -> Like:
         user = user_service.get_user_by_id(db, request_user['id'])
         
-        like = db.query(Like).filter(Like.id == request.tweet, Like.user == user.id).first()
+        like = db.query(Like).filter(Like.tweet == request.tweet, Like.user == user.id).first()
 
         if like:
             if not like.is_active:
                 like.is_active = True
             else:
                 like.is_active = False
+
             db.commit()
             db.refresh(like)
             return like
