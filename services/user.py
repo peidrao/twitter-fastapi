@@ -3,7 +3,7 @@ from requests import request
 from sqlmodel import Session
 from models.tweet import Tweet
 
-from models.user import User
+from models.user import User, UserAction
 from utils.hash import Hash
 from schemas.user import UserAuth, UserBase, UserDisplay
 
@@ -61,5 +61,41 @@ class UserService:
             return Response(status_code=status.HTTP_204_NO_CONTENT)
         
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+    
+    def me_followers(self, db: Session, username: str) -> User:
+        user = db.query(User).filter(User.username == username, User.is_active == True).first()
+        user_actions = db.query(UserAction).filter(UserAction.user_ref == user.id).all()
+        json = []
+        for user in user_actions:
+            data = {}
+            user = db.query(User).filter(User.id == user.user, User.is_active == True).first()
+            data['id'] = user.id
+            data['username'] = user.username
+            data['email'] = user.email
+            data['name'] = user.name
+            json.append(data)
+        
+        return json
+    
+    def me_following(self, db: Session, username: str) -> User:
+        user = db.query(User).filter(User.username == username, User.is_active == True).first()
+        user_actions = db.query(UserAction).filter(UserAction.user == user.id).all()
+        json = []
+        for user in user_actions:
+            data = {}
+            user = db.query(User).filter(User.id == user.user_ref, User.is_active == True).first()
+            data['id'] = user.id
+            data['username'] = user.username
+            data['email'] = user.email
+            data['name'] = user.name
+            json.append(data)
+        
+        return json
+
+
+
+
+
+
 
 user = UserService()
