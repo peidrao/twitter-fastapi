@@ -14,5 +14,4 @@ router = APIRouter()
 @router.post('/follow/')
 async def follow(request: UserActionBase, request_user: UserAuth = Depends(get_current_user)) -> Any:
     with Session(engine) as session:
-        
         return action.create(db=session, request=request, request_user=request_user)
