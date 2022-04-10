@@ -1,12 +1,12 @@
 from fastapi import Response, status, HTTPException
-from sqlmodel import Session, asc, desc
+from sqlmodel import Session
 
 from models import Tweet
 from models.user import User, UserAction
 from schemas.user import UserAuth
 
 from services.user import user as user_service
-from schemas.tweet import TweetBase, TweetDisplay
+from schemas.tweet import TweetBase
 from utils.tweet_addons import tweet_count
 
 

@@ -1,5 +1,5 @@
-from typing import Any, List, Union
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Any, List
+from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from authentication.oauth import get_current_user
 

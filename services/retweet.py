@@ -1,12 +1,8 @@
-from typing import List, Optional
-from fastapi import Response, status, HTTPException
-from fastapi.encoders import jsonable_encoder
+from fastapi import status, HTTPException
 from sqlmodel import Session
 
-from models import Tweet, Like, Retweet
-from models.user import User
+from models import Retweet
 from schemas.user import UserAuth
-from schemas.like import LikeBase
 
 from services.user import user as user_service
 from schemas.retweet import RetweetBase

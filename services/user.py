@@ -1,11 +1,10 @@
 from fastapi import Response, status, HTTPException
-from requests import request
 from sqlmodel import Session
 from models.tweet import Tweet
 
 from models.user import User, UserAction
 from utils.hash import Hash
-from schemas.user import UserAuth, UserBase, UserDisplay
+from schemas.user import UserAuth, UserBase
 
 
 class UserService:
