@@ -1,5 +1,7 @@
-# Twitter FastAPI
+# Twitter FastAPI :bird:
 
-## Start Application
 
-> python main.py
+## :pencil: About The Project
+
+
+
