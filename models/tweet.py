@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Optional
-from xmlrpc.client import boolean
 from sqlmodel import Field, SQLModel
 
 
@@ -19,7 +18,7 @@ class Like(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     tweet: Optional[int] = Field(default=None, foreign_key="tweet.id")
     user: Optional[int] = Field(default=None, foreign_key="user.id")
-    is_active: Optional[boolean] = Field(default=True)
+    is_active: Optional[bool] = Field(default=True)
 
 
 class Retweet(SQLModel, table=True):
@@ -27,4 +26,4 @@ class Retweet(SQLModel, table=True):
     comment: Optional[str] = Field(max_length=280)
     tweet: Optional[int] = Field(default=None, foreign_key="tweet.id")
     user: Optional[int] = Field(default=None, foreign_key="user.id")
-    is_active: Optional[boolean] = Field(default=True)
+    is_active: Optional[bool] = Field(default=True)
