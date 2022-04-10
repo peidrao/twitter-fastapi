@@ -2,7 +2,7 @@ from sqlmodel import Session
 
 from models import UserAction
 from schemas.user import UserAuth
-from schemas.actions import UserActionBase
+from schemas.action import UserActionBase
 
 from services.user import user as user_service
 
