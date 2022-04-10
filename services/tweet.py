@@ -1,7 +1,8 @@
 from fastapi import Response, status, HTTPException
-from sqlmodel import Session
+from sqlmodel import Session, asc, desc
 
 from models import Tweet
+from models.user import User, UserAction
 from schemas.user import UserAuth
 
 from services.user import user as user_service
@@ -37,11 +38,24 @@ class TweetService:
 
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     
-    def get_all(self, db: Session) -> Tweet:
-        tweets = db.query(Tweet).filter(Tweet.is_active == True).all()
+    def get_all(self, db: Session, request_user: UserAuth) -> Tweet:
+        user = db.query(User).filter(User.username == request_user['username'], User.is_active == True).first()
+        user_actions = db.query(UserAction).filter(UserAction.user == user.id).all()
+        
         json = []
-        for tweet in tweets:
-            json.append(tweet_count(tweet, db))
+        for user in user_actions:
+            user = db.query(User).filter(User.id == user.user_ref, User.is_active == True).first()
+            tweets = db.query(Tweet).filter(Tweet.user == user.id, Tweet.is_active == True).all()
+            for tweet in tweets:
+                data = {}
+                data['id'] = tweet.id
+                data['text'] = tweet.text
+                data['user'] = tweet.user
+                data['created_at'] = tweet.created_at
+
+                json.append(data)
+
+        json.sort(key=lambda x: x['created_at'], reverse=True)
         return json
 
     

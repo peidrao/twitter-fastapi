@@ -30,9 +30,9 @@ async def delete(id: int = id, request_user: UserAuth = Depends(get_current_user
         return object
 
 @router.get('/', response_model=List[TweetDisplay])
-async def get_tweets() -> Any:
+async def get_tweets(request_user: UserAuth = Depends(get_current_user)) -> Any:
     with Session(engine) as session:
-        return tweet.get_all(db=session)
+        return tweet.get_all(db=session, request_user=request_user)
 
 @router.get('/{id}', response_model=TweetDisplay)
 async def get_tweet(id: int = id) -> Any:
