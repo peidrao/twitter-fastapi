@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from core.config import settings
-from database.session import create_db
+from core.database import create_db
 from routers.routers import api_router
 
 

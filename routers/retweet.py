@@ -6,7 +6,7 @@ from authentication.oauth import get_current_user
 from schemas.user import UserAuth
 from schemas.retweet import RetweetBase
 from services.retweet import retweet
-from database.session import engine
+from core.database import engine
 
 
 router = APIRouter()

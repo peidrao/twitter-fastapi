@@ -5,7 +5,7 @@ from authentication.oauth import get_current_user
 
 from schemas.user import UserAuth, UserDisplay, UserBase, UserProfileDisplay
 from services.user import user
-from database.session import engine
+from core.database import engine
 
 
 router = APIRouter()

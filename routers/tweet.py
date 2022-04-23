@@ -11,7 +11,7 @@ from schemas.user import UserAuth
 from services.tweet import tweet
 from services.retweet import retweet
 from services.like import like
-from database.session import engine
+from core.database import engine
 
 
 router = APIRouter()

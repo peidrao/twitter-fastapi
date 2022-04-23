@@ -6,7 +6,7 @@ from authentication.oauth import get_current_user
 from schemas.user import UserAuth
 from schemas.action import UserActionBase
 from services.actions import action
-from database.session import engine
+from core.database import engine
 
 
 router = APIRouter()

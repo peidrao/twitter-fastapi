@@ -6,7 +6,7 @@ from schemas.like import LikeBase
 
 from schemas.user import UserAuth
 from services.like import like
-from database.session import engine
+from core.database import engine
 
 
 router = APIRouter()

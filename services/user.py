@@ -92,9 +92,4 @@ class UserService:
         return json
 
 
-
-
-
-
-
 user = UserService()

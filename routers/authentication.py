@@ -5,7 +5,7 @@ from authentication.oauth import create_access_token
 from sqlmodel import Session
 from models.user import User
 from utils.hash import Hash
-from database.session import engine
+from core.database import engine
 
 
 router = APIRouter()

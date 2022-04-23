@@ -1,4 +1,5 @@
-from fastapi import Response, status, HTTPException
+from fastapi import Response, HTTPException
+from starlette import status
 from sqlmodel import Session
 
 from models import Tweet
@@ -64,20 +65,8 @@ class TweetService:
         tweet = tweet_count(tweet, db)
         return tweet
 
-    
-    def get_tweets_by_profile(self, db: Session, username: str, request_user: UserAuth) -> Tweet:
+    def get_tweets_by_profile(self, db: Session, username: str) -> Tweet:
         user = db.query(User).filter(User.username == username).first()
-        user_action = db.query(UserAction).filter(UserAction.user == request_user['id'], UserAction.user_ref == user.id).first()
-        user_action2 = db.query(UserAction).filter(UserAction.user == user.id, UserAction.user_ref == request_user['id']).first()
-        
-        status = verify_status_profile(user_action)
-        status2 = verify_status_profile(user_action2)
-
-        if not status:
-            return False
-        
-        if not status2:
-            return False
 
         tweets = db.query(Tweet).filter(Tweet.user == user.id, Tweet.is_active == True).all()
         return tweets
