@@ -7,6 +7,7 @@ from schemas.user import UserAuth
 
 from services.user import user as user_service
 from schemas.tweet import TweetBase
+from utils.tweet_actions import verify_status_profile
 from utils.tweet_addons import tweet_count
 
 
@@ -58,11 +59,28 @@ class TweetService:
         json.sort(key=lambda x: x['created_at'], reverse=True)
         return json
 
-    
     def get_tweet_by_id(self, db: Session, id: int) -> Tweet:
         tweet = db.query(Tweet).filter(Tweet.id == id).first()
         tweet = tweet_count(tweet, db)
         return tweet
+
+    
+    def get_tweets_by_profile(self, db: Session, username: str, request_user: UserAuth) -> Tweet:
+        user = db.query(User).filter(User.username == username).first()
+        user_action = db.query(UserAction).filter(UserAction.user == request_user['id'], UserAction.user_ref == user.id).first()
+        user_action2 = db.query(UserAction).filter(UserAction.user == user.id, UserAction.user_ref == request_user['id']).first()
+        
+        status = verify_status_profile(user_action)
+        status2 = verify_status_profile(user_action2)
+
+        if not status:
+            return False
+        
+        if not status2:
+            return False
+
+        tweets = db.query(Tweet).filter(Tweet.user == user.id, Tweet.is_active == True).all()
+        return tweets
 
 
 tweet = TweetService()
