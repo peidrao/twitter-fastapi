@@ -4,7 +4,7 @@ from sqlmodel import Session
 
 from models import Like
 from schemas.user import UserAuth
-from schemas.like import LikeBase
+from schemas.tweet import LikeBase
 
 from services.user import user as user_service
 from utils.tweet_addons import get_tweet_actions

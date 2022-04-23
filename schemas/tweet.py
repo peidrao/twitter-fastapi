@@ -17,3 +17,29 @@ class TweetDisplay(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class RetweetBase(BaseModel):
+    tweet: int
+    comment: Optional[str]
+
+
+class RetweetDisplay(BaseModel):
+    tweet: int
+    username: str
+    comment: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
+class LikeBase(BaseModel):
+    tweet: int
+
+
+class LikeDisplay(BaseModel):
+    tweet: int
+    username: str
+
+    class Config:
+        orm_mode = True

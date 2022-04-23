@@ -2,7 +2,7 @@ from typing import Any
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from authentication.oauth import get_current_user
-from schemas.like import LikeBase
+from schemas.tweet import LikeBase
 
 from schemas.user import UserAuth
 from services.like import like

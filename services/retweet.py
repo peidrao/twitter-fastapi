@@ -5,7 +5,7 @@ from models import Retweet
 from schemas.user import UserAuth
 
 from services.user import user as user_service
-from schemas.retweet import RetweetBase
+from schemas.tweet import RetweetBase
 from utils.tweet_addons import get_tweet_actions
 
 

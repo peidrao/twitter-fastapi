@@ -2,10 +2,8 @@ from typing import Any, List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from authentication.oauth import get_current_user
-from schemas.like import LikeDisplay
-from schemas.retweet import RetweetDisplay
 
-from schemas.tweet import TweetDisplay, TweetBase
+from schemas.tweet import TweetDisplay, TweetBase, RetweetDisplay, LikeDisplay
 from schemas.user import UserAuth
 
 from services.tweet import tweet

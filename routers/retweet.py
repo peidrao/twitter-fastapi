@@ -4,7 +4,7 @@ from sqlmodel import Session
 from authentication.oauth import get_current_user
 
 from schemas.user import UserAuth
-from schemas.retweet import RetweetBase
+from schemas.tweet import RetweetBase
 from services.retweet import retweet
 from core.database import engine
 
