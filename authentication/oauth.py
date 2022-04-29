@@ -14,7 +14,7 @@ from services.user import user
 from core.database import engine
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
 def create_access_token(request: dict, expires_delta: Optional[timedelta] = None):
@@ -28,7 +28,7 @@ def create_access_token(request: dict, expires_delta: Optional[timedelta] = None
     encoded_jwt = jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme)):
     with Session(engine) as session:
         credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials.')
         try:

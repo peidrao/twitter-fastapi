@@ -38,7 +38,7 @@ class RetweetService:
             db.refresh(retweet)
             return retweet
     
-        raise HTTPException(detail='User not exists', status_code=404)
+        raise HTTPException(detail='User not exists', status_code=status.HTTP_404_NOT_FOUND)
 
     def get_retweets_by_tweet(self, db: Session, id: int, request_user: UserAuth) -> Retweet:
         retweets = db.query(Retweet).filter(Retweet.tweet == id, Retweet.is_active == True).all()

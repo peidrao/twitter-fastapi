@@ -8,7 +8,6 @@ from schemas.user import UserAuth
 
 from services.user import user as user_service
 from schemas.tweet import TweetBase
-from utils.tweet_actions import verify_status_profile
 from utils.tweet_addons import tweet_count
 
 
