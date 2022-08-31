@@ -7,7 +7,7 @@ from schemas.user import UserAuth
 from schemas.tweet import LikeBase
 
 from services.user import user as user_service
-from utils.tweet_addons import get_tweet_actions
+# from utils.tweet_addons import get_tweet_actions
 
 
 class LikeService:
@@ -41,7 +41,7 @@ class LikeService:
 
     def get_likes_by_tweet(self, db: Session, id: int, request_user: UserAuth) -> Like:
         likes = db.query(Like).filter(Like.tweet == id, Like.is_active == True).all()
-        return get_tweet_actions(likes, db)
+        # return get_tweet_actions(likes, db)
 
 
 like = LikeService()

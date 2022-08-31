@@ -51,7 +51,7 @@ async def get_like_users(id_tweet: int, request_user: UserAuth = Depends(get_cur
         return object
 
 
-@router.get('/profile/{username}', response_model=List[TweetDisplay] | Any)
+@router.get('/profile/{username}', response_model=List[TweetDisplay])
 async def get_tweets_profile(username: str, request_user: UserAuth = Depends(get_current_user)) -> Any:
     with Session(engine) as session:
         tweets = tweet.get_tweets_by_profile(db=session, username=username, request_user=request_user)

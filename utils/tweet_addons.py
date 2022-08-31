@@ -15,11 +15,11 @@ def tweet_count(tweet: Tweet, db: Session) -> Dict:
     return tweet
 
 
-def get_tweet_actions(actions: Like | Retweet, db: Session) -> List:
-    json = []
-    for action in actions:
-        action = action.dict()
-        user = db.query(User).filter(User.id == action['user']).first()
-        action.update(username=user.username)
-        json.append(action)
-    return json
+# def get_tweet_actions(actions: Like | Retweet, db: Session) -> List:
+#     json = []
+#     for action in actions:
+#         action = action.dict()
+#         user = db.query(User).filter(User.id == action['user']).first()
+#         action.update(username=user.username)
+#         json.append(action)
+#     return json
