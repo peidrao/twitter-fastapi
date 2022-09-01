@@ -1,26 +1,28 @@
-from fastapi import Response, status, HTTPException
+from fastapi import Response, status, HTTPException, Request
 from sqlmodel import Session
 from models.tweet import Tweet
 
 from models.user import User, UserAction
 from utils.hash import Hash
 from schemas.user import UserAuth, UserBase
+from core.database import engine
 
 
 class UserService:
-    def create(self, db: Session, request: UserBase) -> User:
-        user = User(
-            name=request.name,
-            birthday=request.birthday,
-            username=request.username,
-            email=request.email,
-            password=Hash.bcrypt(request.password)
-        )
+    def create(self, request: UserBase) -> User:        
+        with Session(engine) as db:
+            user = User(
+                name=request.name,
+                birthday=request.birthday,
+                username=request.username,
+                email=request.email,
+                password=Hash.bcrypt(request.password)
+            )
 
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-        return user
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            return user
     
     def get_all(self, db: Session) -> User:
         users = db.query(User).filter(User.is_active == True).all()

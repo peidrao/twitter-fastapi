@@ -1,18 +1,19 @@
 from datetime import date, datetime
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, Field
+from typing import Optional, Union
 
 
 class UserBase(BaseModel):
-    name: str
+    name: str = Field()
     birthday: date
-    username: str
+    username: str 
     email: str
-    password: str
+    password: str = Field(min_length=5)
 
 
 class UserDisplay(BaseModel):
     username: Optional[str]
+    id: int
     email: Optional[str]
 
     class Config:

@@ -1,5 +1,6 @@
 from typing import Any, List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Response
+from pydantic import ValidationError
 from sqlmodel import Session
 from authentication.oauth import get_current_user
 
@@ -13,10 +14,8 @@ router = APIRouter()
 
 @router.post('/', response_model=UserDisplay)
 async def create_user(request: UserBase) -> Any:
-    with Session(engine) as session:
-        
-        object = user.create(db=session, request=request)
-        return object
+    object = user.create(request=request)
+    return object
 
 @router.get('/', response_model=List[UserDisplay])
 async def get_users() -> Any:
