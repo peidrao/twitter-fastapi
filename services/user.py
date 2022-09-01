@@ -1,6 +1,7 @@
 from fastapi import Response, status, HTTPException, Request
 from sqlmodel import Session
 from models.tweet import Tweet
+from typing import List
 
 from models.user import User, UserAction
 from utils.hash import Hash
@@ -21,12 +22,13 @@ class UserService:
             db.refresh(user)
             return user
     
-    def get_all(self, db: Session) -> User:
-        users = db.query(User).filter(User.is_active == True).all()
+    def get_all(self) -> List[User]:
+        with Session(engine) as session:
+            users = session.query(User).filter(User.is_active == True).all()
 
-        return users
+            return users
 
-    def get_user_by_username(self, db: Session, username: str) -> User:
+    def get_by_username(self, db: Session, username: str) -> User:
         user = db.query(User).filter(User.username == username, User.is_active == True).first()
 
         if not user:

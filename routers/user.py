@@ -17,9 +17,9 @@ def create_user(request: UserBase) -> Any:
     return object
 
 @router.get('/', response_model=List[UserDisplay])
-async def get_users() -> Any:
-    with Session(engine) as session:
-        return user.get_all(db=session)
+def get_profiles() -> Any:
+    users  = user.get_all()
+    return users
 
 @router.get('/{username}', response_model=UserProfileDisplay)
 async def get_profile(username: str) -> Any:
