@@ -30,7 +30,6 @@ async def login(request: OAuth2PasswordRequestForm = Depends()):
             session.commit()
             session.refresh(user)
 
-
         return {
             'access_token': access_token,
             'token_type': 'bearer',
@@ -39,4 +38,3 @@ async def login(request: OAuth2PasswordRequestForm = Depends()):
             'email': user.email,
             'is_active': user.is_active
         }
-
