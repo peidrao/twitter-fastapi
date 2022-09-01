@@ -1,13 +1,13 @@
 from datetime import date, datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional, Union
 
 
 class UserBase(BaseModel):
     name: str = Field()
     birthday: date
-    username: str 
-    email: str
+    username: str = Field(min_length=3)
+    email:  EmailStr
     password: str = Field(min_length=5)
 
 

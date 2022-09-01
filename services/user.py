@@ -11,12 +11,9 @@ from core.database import engine
 class UserService:
     def create(self, request: UserBase) -> User:        
         with Session(engine) as db:
-            user = User(
-                name=request.name,
-                birthday=request.birthday,
-                username=request.username,
-                email=request.email,
-                password=Hash.bcrypt(request.password)
+            user = User(name=request.name, birthday=request.birthday,
+                        username=request.username,email=request.email,
+                        password=Hash.bcrypt(request.password)
             )
 
             db.add(user)
