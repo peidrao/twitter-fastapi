@@ -1,12 +1,12 @@
-from fastapi import Response, status, HTTPException, Request
+from fastapi import Response, status, HTTPException
 from sqlmodel import Session
 from models.tweet import Tweet
 from typing import List
 
-from models.user import User, UserAction
+from models import User, UserAction
 from utils.hash import Hash
 from schemas.user import UserAuth, UserBase
-from core.database import engine
+from core import engine
 
 
 class UserService:
@@ -28,19 +28,21 @@ class UserService:
 
             return users
 
-    def get_by_username(self, db: Session, username: str) -> User:
-        user = db.query(User).filter(User.username == username, User.is_active == True).first()
+    def get_profile_by_username(self, username: str) -> User:
+        with Session(engine) as session:
+            user = session.query(User).filter(User.username == username, User.is_active == True).first()
 
-        if not user:
-            raise HTTPException(detail='User not found', status=404)
-        
-        return user
+            if not user:
+                raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
+
+            return user
     
-    def get_user_by_id(self, db: Session, id: int) -> User:
-        user = db.query(User).filter(User.id == id, User.is_active == True).first()
+    def get_profile_by_id(self, id: int) -> User:
+        with Session(engine) as session:
+            user = session.query(User).filter(User.id == id, User.is_active == True).first()
 
-        if not user:
-            return False
+            if not user:
+                raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
         
         return user
 

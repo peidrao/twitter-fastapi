@@ -9,35 +9,35 @@ from schemas.user import UserAuth
 from services.user import user as user_service
 from schemas.tweet import TweetBase
 from utils.tweet_addons import tweet_count
+from core import engine
 
 
 class TweetService:
-    def create(self, db: Session, request: TweetBase, request_user: UserAuth) -> Tweet:
-        user = user_service.get_user_by_id(db, request_user['id'])
-        if user:
-            tweet = Tweet(
-                text=request.text,
-                user=user.id
-            )
+    def create(self, request: TweetBase, request_user: UserAuth) -> Tweet:
+        with Session(engine) as session:
+            user = user_service.get_profile_by_id(request_user['id'])
+            if user:
+                tweet = Tweet(text=request.text, user=user.id)
 
-            db.add(tweet)
-            db.commit()
-            db.refresh(tweet)
-            return tweet
-    
-        raise HTTPException(detail='User not exists', status_code=404)
-
-    def delete(self, db: Session, id: int, request_user: UserAuth) -> Tweet:
-        user = user_service.get_user_by_id(db, request_user['id'])
-        tweet = db.query(Tweet).filter(Tweet.id == id).first()
+                session.add(tweet)
+                session.commit()
+                session.refresh(tweet)
+                return tweet
         
-        if user.id == tweet.user:
-            tweet.is_active = False
-            db.commit()  
-            db.refresh(user)
-            return Response(status_code=status.HTTP_204_NO_CONTENT)
+            raise HTTPException(detail='User not exists', status_code=404)
 
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+    def delete(self, id: int, request_user: UserAuth) -> Tweet:
+        with Session(engine) as session:
+            user = user_service.get_profile_by_id(request_user.id)
+            tweet = session.query(Tweet).filter(Tweet.id == id).first()
+            
+            if user.id == tweet.user:
+                tweet.is_active = False
+                session.commit()  
+                session.refresh(user)
+                return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+            return Response(status_code=status.HTTP_404_NOT_FOUND)
     
     def get_all(self, db: Session, request_user: UserAuth) -> Tweet:
         user = db.query(User).filter(User.username == request_user['username'], User.is_active == True).first()
@@ -59,10 +59,11 @@ class TweetService:
         json.sort(key=lambda x: x['created_at'], reverse=True)
         return json
 
-    def get_tweet_by_id(self, db: Session, id: int) -> Tweet:
-        tweet = db.query(Tweet).filter(Tweet.id == id).first()
-        tweet = tweet_count(tweet, db)
-        return tweet
+    def get_tweet_by_id(self, id: int) -> Tweet:
+        with Session(engine) as session:
+            tweet = session.query(Tweet).filter(Tweet.id == id).first()
+            tweet = tweet_count(tweet, db)
+            return tweet
 
     def get_tweets_by_profile(self, db: Session, username: str) -> Tweet:
         user = db.query(User).filter(User.username == username).first()

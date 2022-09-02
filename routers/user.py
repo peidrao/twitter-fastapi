@@ -22,9 +22,8 @@ def get_profiles() -> Any:
     return users
 
 @router.get('/{username}', response_model=UserProfileDisplay)
-async def get_profile(username: str) -> Any:
-    with Session(engine) as session:
-        return user.get_profile(db=session, username=username)
+def get_profile(username: str) -> Any:
+    return user.get_profile_by_username(username=username)
 
 
 @router.patch('/deactivate/')
