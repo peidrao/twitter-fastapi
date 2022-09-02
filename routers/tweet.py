@@ -1,5 +1,5 @@
 from typing import Any, List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlmodel import Session
 from authentication.oauth import get_current_user
 
@@ -16,16 +16,13 @@ router = APIRouter()
 
 
 @router.post('/', response_model=TweetDisplay)
-async def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_current_user)) -> Any:
-    with Session(engine) as session:
-        object = tweet.create(db=session, request=request, request_user=request_user)
-        return object
+def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_current_user)) -> Any:
+    object = tweet.create(request=request, request_user=request_user)
+    return object
 
 @router.delete('/{id}', response_model=None)
-async def delete(id: int = id, request_user: UserAuth = Depends(get_current_user)) -> Any:
-    with Session(engine) as session:
-        object = tweet.delete(db=session, id=id, request_user=request_user)
-        return object
+def delete(id: int = id, request_user: UserAuth = Depends(get_current_user)) -> Any:
+    return tweet.delete(id=id, request_user=request_user)
 
 @router.get('/', response_model=List[TweetDisplay])
 async def get_tweets(request_user: UserAuth = Depends(get_current_user)) -> Any:
@@ -33,21 +30,14 @@ async def get_tweets(request_user: UserAuth = Depends(get_current_user)) -> Any:
         return tweet.get_all(db=session, request_user=request_user)
 
 @router.get('/{id}', response_model=TweetDisplay)
-async def get_tweet(id: int = id) -> Any:
-    with Session(engine) as session:
-        return tweet.get_tweet_by_id(db=session, id=id)
+def get_tweet(id: int = id) -> Any:
+    return tweet.get_tweet_by_id(id=id)
 
 
 @router.get('/retweets/{id_tweet}', response_model=List[RetweetDisplay])
 async def get_retweet_users(id_tweet: int, request_user: UserAuth = Depends(get_current_user)) -> Any:
     with Session(engine) as session:
         object = retweet.get_retweets_by_tweet(db=session, id=id_tweet, request_user=request_user)
-        return object
-
-@router.get('/likes/{id_tweet}', response_model=List[LikeDisplay])
-async def get_like_users(id_tweet: int, request_user: UserAuth = Depends(get_current_user)) -> Any:
-    with Session(engine) as session:
-        object = like.get_likes_by_tweet(db=session, id=id_tweet, request_user=request_user)
         return object
 
 
