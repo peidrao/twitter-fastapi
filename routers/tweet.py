@@ -41,8 +41,8 @@ async def get_retweet_users(id_tweet: int, request_user: UserAuth = Depends(get_
         return object
 
 
-@router.get('/profile/{username}', response_model=List[TweetDisplay])
-async def get_tweets_profile(username: str, request_user: UserAuth = Depends(get_current_user)) -> Any:
-    with Session(engine) as session:
-        tweets = tweet.get_tweets_by_profile(db=session, username=username, request_user=request_user)
-        return tweets
+@router.get('/profile/{username}', response_model=List[TweetDisplay], 
+            dependencies=[Depends(get_current_user)])
+def get_tweets_profile(username: str) -> Any:
+    tweets = tweet.get_tweets_by_profile(username=username)
+    return tweets

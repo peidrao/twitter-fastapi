@@ -3,7 +3,7 @@ from sqlmodel import Session
 from models.tweet import Tweet
 from typing import List
 
-from models import User, UserAction
+from models import User, Follow
 from utils.hash import Hash
 from schemas.user import UserAuth, UserBase
 from core import engine
@@ -66,7 +66,7 @@ class UserService:
     
     def me_followers(self, db: Session, username: str) -> User:
         user = db.query(User).filter(User.username == username, User.is_active == True).first()
-        user_actions = db.query(UserAction).filter(UserAction.user_ref == user.id).all()
+        user_actions = db.query(Follow).filter(Follow.user_ref == user.id).all()
         json = []
         for user in user_actions:
             data = {}
