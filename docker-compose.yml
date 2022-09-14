@@ -8,7 +8,6 @@ services:
       POSTGRES_USER: 'root'
       POSTGRES_PASSWORD: 'root'
       POSTGRES_DB: 'tweet_database'
-
     volumes:
       - postgres:/data/postgres
     ports:
