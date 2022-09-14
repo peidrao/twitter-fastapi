@@ -1,4 +1,5 @@
-from sqlmodel import create_engine, SQLModel
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from pydantic import PostgresDsn
 
@@ -12,7 +13,7 @@ SQLAlCHEMY_DATABASE_URI = PostgresDsn.build(
     )
 
 
-engine = create_engine(SQLAlCHEMY_DATABASE_URI, pool_pre_ping=True,)
+engine = create_engine(SQLAlCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -20,10 +21,10 @@ SessionLocal = sessionmaker(
     bind=engine
 )
 
-try:
-    db = SessionLocal()
-except Exception as e:
-    raise e
 
-def create_db():
-    SQLModel.metadata.create_all(engine)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
