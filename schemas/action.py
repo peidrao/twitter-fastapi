@@ -7,3 +7,11 @@ class UserActionBase(BaseModel):
     is_blocked: Optional[bool]
     is_muted: Optional[bool]
     is_followed: Optional[bool]
+
+
+class FollowDisplay(BaseModel):
+    user_ref: int
+    user: int
+
+    class Config:
+        orm_mode = True

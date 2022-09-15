@@ -10,7 +10,6 @@ from schemas.user import UserAuth
 from services.user import user as user_service
 from schemas.tweet import TweetBase
 from utils.tweet_addons import tweet_count
-from core import engine
 
 
 class TweetService:

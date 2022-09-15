@@ -6,7 +6,6 @@ from typing import List
 from models import User, Follow
 from utils.hash import Hash
 from schemas.user import UserAuth, UserBase
-from core import engine
 
 
 class UserService:
@@ -38,7 +37,7 @@ class UserService:
             return user
     
     def get_profile_by_id(self, id: int) -> User:
-        with Session(engine) as session:
+        with Session() as session:
             user = session.query(User).filter(User.id == id, User.is_active == True).first()
 
             if not user:
