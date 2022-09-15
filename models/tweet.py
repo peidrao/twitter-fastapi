@@ -1,31 +1,39 @@
 from datetime import datetime
-from typing import Optional
-from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, ForeignKey, Integer, Boolean, String, DateTime
+from sqlalchemy.orm import relationship
+from core.base_class import Base
 
 
-class Tweet(SQLModel, table=True):
-    __tablename__ = 'tweets'
-    id: Optional[int] = Field(default=None, primary_key=True)
-    text: str
-    likes: Optional[int]
-    is_active: Optional[bool] = Field(default=True)
-    created_at: Optional[datetime] = Field(default=datetime.utcnow())
-    updated_at: Optional[datetime] = Field(default=datetime.utcnow())
+class Tweet(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    text =  Column(String(140), nullable=False)
+    likes = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow())
+    updated_at = Column(DateTime, default=datetime.utcnow())
+
+    user_id = Column(Integer, ForeignKey("user.id"))
     
-    user: Optional[int] = Field(default=None, foreign_key="users.id")
+    user = relationship("User", back_populates="tweet")
+    
+
+class Like(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    tweet_id = Column(Integer, ForeignKey("tweet.id"))
+    user_id = Column(Integer, ForeignKey("user.id"))
+    is_active = Column(Boolean, default=True)
+
+    tweet = relationship(Tweet, back_populates='like')
+    user = relationship("User", back_populates='like')
 
 
-class Like(SQLModel, table=True):
-    __tablename__ = 'likes'
-    id: int = Field(default=None, primary_key=True)
-    tweet: Optional[int] = Field(default=None, foreign_key="tweets.id")
-    user: Optional[int] = Field(default=None, foreign_key="users.id")
-    is_active: Optional[bool] = Field(default=True)
 
+class Retweet(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    comment = Column(String(140))
+    tweet_id = Column(Integer, ForeignKey("tweet.id"))
+    user_id = Column(Integer, ForeignKey("user.id"))
+    is_active = Column(Boolean, default=True)
 
-class Retweet(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    comment: Optional[str] = Field(max_length=280)
-    tweet: Optional[int] = Field(default=None, foreign_key="tweets.id")
-    user: Optional[int] = Field(default=None, foreign_key="users.id")
-    is_active: Optional[bool] = Field(default=True)
+    tweet = relationship(Tweet, back_populates='retweet')
+    user = relationship("User", back_populates='retweet')
