@@ -1,6 +1,5 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends
-from sqlmodel import Session
 # from authentication.oauth import get_current_user
 
 from schemas.user import UserAuth, UserDisplay, UserBase, UserProfileDisplay
