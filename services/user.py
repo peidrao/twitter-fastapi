@@ -11,11 +11,14 @@ from schemas.user import UserAuth, UserBase
 
 
 class UserService:
-    def create(self, request: UserBase) -> User:     
+    def create(self, request: UserBase, session = SessionLocal()) -> User:     
         obj_in_data = jsonable_encoder(request)
+        if session.query(User).filter(User.email == obj_in_data['email']).first():
+            raise HTTPException(status_code=400, detail='User already exists')
+        
         obj_in_data['password'] = Hash.bcrypt(request.password)
         db_obj = User(**obj_in_data)     
-        session = SessionLocal()   
+        
         session.add(db_obj)
         session.commit()
         session.refresh(db_obj)

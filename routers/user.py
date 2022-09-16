@@ -12,8 +12,8 @@ router = APIRouter()
 
 @router.post('/', response_model=UserDisplay)
 def create_user(request: UserBase) -> Any:
-    object = user.create(request=request)
-    return object
+    return user.create(request=request)
+    
 
 
 # @router.get('/', response_model=List[UserDisplay])
