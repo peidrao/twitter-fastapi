@@ -1,7 +1,7 @@
 from fastapi import Response, status, HTTPException
 from sqlalchemy.orm import Session
 from models.tweet import Tweet
-from typing import List
+from typing import Any, List
 from fastapi.encoders import jsonable_encoder
 from core.session import SessionLocal
 
@@ -55,16 +55,17 @@ class UserService:
     #     user.update(tweets_count=tweet)
     #     return user
 
-    # def deactivate_account(self, db: Session, request_user: UserAuth) -> User:
-    #     user = db.query(User).filter(User.id == request_user['id'], User.is_active == True).first()
+    def deactivate_account(self, request_user: UserAuth) -> Any:
+        with SessionLocal() as session:
+            user = session.query(User).filter(User.id == request_user['id'], User.is_active == True).first()
 
-    #     if user:
-    #         user.is_active = False
-    #         db.commit()  
-    #         db.refresh(user)
-    #         return Response(status_code=status.HTTP_204_NO_CONTENT)
-        
-    #     return Response(status_code=status.HTTP_404_NOT_FOUND)
+            if not user:
+                raise HTTPException(status_code=404, detail='User not found')
+            user.is_active = False
+            session.commit()  
+            session.refresh(user)
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+
     
     # def me_followers(self, db: Session, username: str) -> User:
     #     user = db.query(User).filter(User.username == username, User.is_active == True).first()
