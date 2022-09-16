@@ -14,7 +14,7 @@ class Tweet(Base):
 
     user_id = Column(Integer, ForeignKey("user.id"))
     
-    user = relationship("User", back_populates="tweet")
+    user = relationship("User", foreign_keys=[user_id])
     
 
 class Like(Base):
@@ -23,9 +23,8 @@ class Like(Base):
     user_id = Column(Integer, ForeignKey("user.id"))
     is_active = Column(Boolean, default=True)
 
-    tweet = relationship(Tweet, back_populates='like')
-    user = relationship("User", back_populates='like')
-
+    tweet = relationship("Tweet", foreign_keys=[tweet_id])
+    user = relationship("User", foreign_keys=[user_id])
 
 
 class Retweet(Base):
@@ -35,5 +34,5 @@ class Retweet(Base):
     user_id = Column(Integer, ForeignKey("user.id"))
     is_active = Column(Boolean, default=True)
 
-    tweet = relationship(Tweet, back_populates='retweet')
-    user = relationship("User", back_populates='retweet')
+    tweet = relationship(Tweet, foreign_keys=[tweet_id])
+    user = relationship("User", foreign_keys=[user_id])

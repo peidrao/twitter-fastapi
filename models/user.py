@@ -30,5 +30,5 @@ class Follow(Base):
     created_at= Column(DateTime, default=datetime.utcnow())
     updated_at =  Column(DateTime, default=datetime.utcnow())
 
-    user = relationship("User", back_populates="follow")
-    user_ref = relationship("User", back_populates="follow")
+    user = relationship("User", foreign_keys=[user_id])
+    user_ref = relationship("User", foreign_keys=[user_ref_id])
