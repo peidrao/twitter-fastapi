@@ -1,7 +1,7 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends, Response
 from sqlmodel import Session
-# from authentication.oauth import get_current_user
+from authentication.oauth import get_current_user
 
 from schemas.tweet import TweetDisplay, TweetBase, RetweetDisplay, LikeDisplay
 from schemas.user import UserAuth
@@ -15,10 +15,9 @@ from services.tweet import tweet
 router = APIRouter()
 
 
-# @router.post('/', response_model=TweetDisplay)
-# def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_current_user)) -> Any:
-#     object = tweet.create(request=request, request_user=request_user)
-#     return object
+@router.post('/', response_model=TweetDisplay)
+def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_current_user)) -> Any:
+    return tweet.create(request=request, request_user=request_user)
 
 # @router.delete('/{id}', response_model=None)
 # def delete(id: int = id, request_user: UserAuth = Depends(get_current_user)) -> Any:

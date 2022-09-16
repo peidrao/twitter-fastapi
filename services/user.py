@@ -1,5 +1,4 @@
 from fastapi import Response, status, HTTPException
-from sqlalchemy.orm import Session
 from models.tweet import Tweet
 from typing import Any, List
 from fastapi.encoders import jsonable_encoder
@@ -39,21 +38,22 @@ class UserService:
                 raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
             return user
     
-    # def get_profile_by_id(self, id: int) -> User:
-    #     with Session() as session:
-    #         user = session.query(User).filter(User.id == id, User.is_active == True).first()
+    def get_profile_by_id(self, id: int) -> User:
+        with SessionLocal() as session:
+            user = session.query(User).filter(User.id == id, User.is_active == True).first()
 
-    #         if not user:
-    #             raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
+            if not user:
+                raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
         
-    #     return user
+        return user
 
-    # def get_profile(self, db: Session, username: str) -> User:
-    #     user = db.query(User).filter(User.username == username).first()
-    #     tweet = db.query(Tweet).filter(Tweet.user == user.id).count()
-    #     user = user.dict()
-    #     user.update(tweets_count=tweet)
-    #     return user
+    def get_profile(self, username: str) -> User:
+        with SessionLocal() as session:
+            user: Any = session.query(User).filter(User.username == username).first()
+            # tweet = db.query(Tweet).filter(Tweet.user == user.id).count()
+            # user = user.dict()
+            # user.update(tweets_count=tweet)
+            return user
 
     def deactivate_account(self, request_user: UserAuth) -> Any:
         with SessionLocal() as session:

@@ -12,7 +12,7 @@ class TweetDisplay(BaseModel):
     likes: Optional[int]
     retweets: Optional[int]
     text: Optional[str]
-    user: Optional[int]
+    # user: Optional[int]
     created_at: datetime
 
     class Config:

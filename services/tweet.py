@@ -2,7 +2,7 @@ from typing import List
 from fastapi import Response, HTTPException
 from starlette import status
 from sqlmodel import Session
-
+from core.session import SessionLocal
 from models import Tweet
 from models.user import User
 from schemas.user import UserAuth
@@ -14,11 +14,10 @@ from utils.tweet_addons import tweet_count
 
 class TweetService:
     def create(self, request: TweetBase, request_user: UserAuth) -> Tweet:
-        with Session(engine) as session:
+        with SessionLocal() as session:
             user = user_service.get_profile_by_id(request_user['id'])
             if user:
-                tweet = Tweet(text=request.text, user=user.id)
-
+                tweet = Tweet(text=request.text, user=user)
                 session.add(tweet)
                 session.commit()
                 session.refresh(tweet)
