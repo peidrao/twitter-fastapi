@@ -25,20 +25,19 @@ class UserService:
         session.close()
         return db_obj
     
-    # def get_all(self) -> List[User]:
-    #     with Session(engine) as session:
-    #         users = session.query(User).filter(User.is_active == True).all()
+    def get_all(self) -> List[User]:
+        with SessionLocal() as session:
+            users = session.query(User).filter(User.is_active == True).all()
 
-    #         return users
+            return users
 
-    # def get_profile_by_username(self, username: str) -> User:
-    #     with Session(engine) as session:
-    #         user = session.query(User).filter(User.username == username, User.is_active == True).first()
+    async def get_profile_by_username(self, username: str) -> User:
+        with SessionLocal() as session:
+            user = session.query(User).filter(User.username == username, User.is_active == True).first()
 
-    #         if not user:
-    #             raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
-
-    #         return user
+            if not user:
+                raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
+            return user
     
     # def get_profile_by_id(self, id: int) -> User:
     #     with Session() as session:

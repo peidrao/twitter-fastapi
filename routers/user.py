@@ -1,10 +1,9 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends
-# from authentication.oauth import get_current_user
+from authentication.oauth import get_current_user
 
 from schemas.user import UserAuth, UserDisplay, UserBase, UserProfileDisplay
 from services.user import user
-# from core.deps import engine
 
 
 router = APIRouter()
@@ -15,11 +14,9 @@ def create_user(request: UserBase) -> Any:
     return user.create(request=request)
     
 
-
-# @router.get('/', response_model=List[UserDisplay])
-# def get_profiles() -> Any:
-#     users  = user.get_all()
-#     return users
+@router.get('/', response_model=List[UserDisplay], dependencies=[Depends(get_current_user)])
+def get_profiles() -> Any:
+    return user.get_all()
 
 
 # @router.get('/{username}', response_model=UserProfileDisplay)
