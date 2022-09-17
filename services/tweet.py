@@ -1,15 +1,12 @@
 from typing import List, Any
 from fastapi import Response, HTTPException
 from starlette import status
-from sqlmodel import Session
 from core.session import SessionLocal
-from models import Tweet
-from models.user import User
+from models import Tweet, User
 from schemas.user import UserAuth
 
 from services.user import user as user_service
 from schemas.tweet import TweetBase
-from utils.tweet_addons import tweet_count
 
 
 class TweetService:
@@ -41,32 +38,22 @@ class TweetService:
     def get_all(self, request_user: UserAuth) -> List[Tweet]:
         with SessionLocal() as session:
             user = session.query(User).filter(User.username == request_user['username'], User.is_active == True).first()
-            json = []
             tweets = session.query(Tweet).filter(Tweet.user == user, Tweet.is_active == True).all()
-            #     for tweet in tweets:
-            #         data = {}
-            #         data['id'] = tweet.id
-            #         data['text'] = tweet.text
-            #         data['user'] = tweet.user
-            #         data['created_at'] = tweet.created_at
-
-            #         json.append(data)
-
-            # json.sort(key=lambda x: x['created_at'], reverse=True)
             return tweets
 
     def get_tweet_by_id(self, id: int) -> Tweet:
-        with Session(engine) as session:
-            tweet = session.query(Tweet).filter(Tweet.id == id).first()
-            tweet = tweet_count(tweet, db)
+        with SessionLocal() as session:
+            tweet = session.query(Tweet).filter(Tweet.id == id, Tweet.is_active == True).first()
+            if not tweet: 
+                raise HTTPException(status_code=404, detail='Tweet not found')
             return tweet
 
     def get_tweets_by_profile(self, username: str) -> List:
         tweets = []
-        with Session(engine) as session:
+        with SessionLocal() as session:
             user = session.query(User).filter(User.username == username).first()
             if user:
-                tweets = session.query(Tweet).filter(Tweet.user == user.id, Tweet.is_active == True).all()
+                tweets = session.query(Tweet).filter(Tweet.user_id == user.id, Tweet.is_active == True).all()
         return tweets
 
 

@@ -1,18 +1,18 @@
 from datetime import datetime
 from pydantic import BaseModel
-from typing import Optional
-
+from typing import Optional, Union
+from schemas.user import UserDisplay
 
 class TweetBase(BaseModel):
     text: str
 
 
 class TweetDisplay(BaseModel):
-    id: Optional[int]
+    id: int
     likes: Optional[int]
     retweets: Optional[int]
-    text: Optional[str]
-    # user: Optional[int]
+    text: str
+    user_id: int
     created_at: datetime
 
     class Config:
