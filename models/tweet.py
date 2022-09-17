@@ -14,7 +14,7 @@ class Tweet(Base):
 
     user_id = Column(Integer, ForeignKey("user.id"))
     
-    user = relationship("User", foreign_keys=[user_id])
+    user = relationship("User", lazy='subquery', foreign_keys=[user_id])
     
 
 class Like(Base):
