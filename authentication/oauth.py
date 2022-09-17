@@ -24,19 +24,19 @@ def create_access_token(request: dict, expires_delta: Optional[timedelta] = None
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials.')
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.ALGORITHM)
         username = payload.get('username')
         if not username:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Username not found')
     except JWTError:
         raise credentials_exception
         
-    current_user = await user.get_profile_by_username(username)
+    current_user = user.get_profile_by_username(username)
     if not current_user:
-        raise credentials_exception
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
         
     return {
         'id': current_user.id,

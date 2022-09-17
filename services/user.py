@@ -30,7 +30,7 @@ class UserService:
 
             return users
 
-    async def get_profile_by_username(self, username: str) -> User:
+    def get_profile_by_username(self, username: str) -> User:
         with SessionLocal() as session:
             user = session.query(User).filter(User.username == username, User.is_active == True).first()
 

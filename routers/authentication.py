@@ -3,16 +3,15 @@ from fastapi.param_functions import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from authentication.oauth import create_access_token
 from core.session import SessionLocal
-from models.user import User
+from models import User
 from utils.hash import Hash
-# from core.deps import engine
 
 
 router = APIRouter()
 
 
 @router.post('/')
-async def login(request: OAuth2PasswordRequestForm = Depends()):
+def login(request: OAuth2PasswordRequestForm = Depends()):
     with SessionLocal() as session:
         user = session.query(User).filter(User.username == request.username).first()
 
@@ -28,7 +27,7 @@ async def login(request: OAuth2PasswordRequestForm = Depends()):
         if not user.is_active:
             user.is_active = True
             session.commit()
-            session.refresh(user)
+            # session.refresh(user)
 
         return {
             'access_token': access_token,

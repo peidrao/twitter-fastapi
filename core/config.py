@@ -1,10 +1,9 @@
-import secrets
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
     API_V1: str = '/api/v1'
-    SECRET_KEY: str = secrets.token_urlsafe(32)
+    SECRET_KEY: str = 'f6db58daedd17dec5f5493456476bed06d83852be22cf3eb9509b5e6cc782aab'
     PROJECT_NAME: str = 'TT'
     # DATABASE_URI: str = 'sqlite:///./database.db'
     DATABASE_URI: str = 'postgresql://root:root@localhost:5434/tweet_database'
