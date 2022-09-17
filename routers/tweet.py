@@ -19,14 +19,13 @@ router = APIRouter()
 def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_current_user)) -> Any:
     return tweet.create(request=request, request_user=request_user)
 
-# @router.delete('/{id}', response_model=None)
-# def delete(id: int = id, request_user: UserAuth = Depends(get_current_user)) -> Any:
-#     return tweet.delete(id=id, request_user=request_user)
+@router.delete('/{id}', response_model=None)
+def delete(id: int, request_user: UserAuth = Depends(get_current_user)) -> Any:
+    return tweet.delete(id=id, request_user=request_user)
 
-# @router.get('/', response_model=List[TweetDisplay])
-# async def get_tweets(request_user: UserAuth = Depends(get_current_user)) -> Any:
-#     with Session(engine) as session:
-#         return tweet.get_all(db=session, request_user=request_user)
+@router.get('/', response_model=List[TweetDisplay])
+async def get_tweets(request_user: UserAuth = Depends(get_current_user)) -> Any:
+    return tweet.get_all(request_user=request_user)
 
 # @router.get('/{id}', response_model=TweetDisplay)
 # def get_tweet(id: int = id) -> Any:

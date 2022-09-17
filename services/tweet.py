@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 from fastapi import Response, HTTPException
 from starlette import status
 from sqlmodel import Session
@@ -25,38 +25,35 @@ class TweetService:
         
             raise HTTPException(detail='User not exists', status_code=404)
 
-    def delete(self, id: int, request_user: UserAuth) -> Tweet:
-        with Session(engine) as session:
-            user = user_service.get_profile_by_id(request_user.id)
+    def delete(self, id: int, request_user: UserAuth) -> Any:
+        with SessionLocal() as session:
+            user = user_service.get_profile_by_id(request_user['id'])
             tweet = session.query(Tweet).filter(Tweet.id == id).first()
             
-            if user.id == tweet.user:
+            if user.id == tweet.user.id:
                 tweet.is_active = False
                 session.commit()  
-                session.refresh(user)
+                session.refresh(tweet)
                 return Response(status_code=status.HTTP_204_NO_CONTENT)
 
             return Response(status_code=status.HTTP_404_NOT_FOUND)
     
-    # def get_all(self, db: Session, request_user: UserAuth) -> Tweet:
-    #     user = db.query(User).filter(User.username == request_user['username'], User.is_active == True).first()
-    #     user_actions = db.query(UserAction).filter(UserAction.user == user.id).all()
-        
-    #     json = []
-    #     for user in user_actions:
-    #         user = db.query(User).filter(User.id == user.user_ref, User.is_active == True).first()
-    #         tweets = db.query(Tweet).filter(Tweet.user == user.id, Tweet.is_active == True).all()
-    #         for tweet in tweets:
-    #             data = {}
-    #             data['id'] = tweet.id
-    #             data['text'] = tweet.text
-    #             data['user'] = tweet.user
-    #             data['created_at'] = tweet.created_at
+    def get_all(self, request_user: UserAuth) -> List[Tweet]:
+        with SessionLocal() as session:
+            user = session.query(User).filter(User.username == request_user['username'], User.is_active == True).first()
+            json = []
+            tweets = session.query(Tweet).filter(Tweet.user == user, Tweet.is_active == True).all()
+            #     for tweet in tweets:
+            #         data = {}
+            #         data['id'] = tweet.id
+            #         data['text'] = tweet.text
+            #         data['user'] = tweet.user
+            #         data['created_at'] = tweet.created_at
 
-    #             json.append(data)
+            #         json.append(data)
 
-    #     json.sort(key=lambda x: x['created_at'], reverse=True)
-    #     return json
+            # json.sort(key=lambda x: x['created_at'], reverse=True)
+            return tweets
 
     def get_tweet_by_id(self, id: int) -> Tweet:
         with Session(engine) as session:
