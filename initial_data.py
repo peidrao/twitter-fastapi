@@ -1,9 +1,6 @@
 import logging
-from sqlalchemy.orm import Session
 
-from core.base_class import Base
-from core import base 
-from core.session import SessionLocal, engine
+from database import engine, Base
 
 logger = logging.getLogger(__name__)
 
