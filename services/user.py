@@ -1,9 +1,8 @@
 from fastapi import Response, status, HTTPException
-from models.tweet import Tweet
 from typing import Any, List
 from fastapi.encoders import jsonable_encoder
-from core.session import SessionLocal
 
+from database import SessionLocal
 from models import User, Follow
 from utils.hash import Hash
 from schemas.user import UserAuth, UserBase

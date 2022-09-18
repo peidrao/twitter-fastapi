@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.encoders import jsonable_encoder
 from fastapi import Depends, HTTPException, status
-from typing import Any, Optional
+from typing import Optional
 from jose import jwt, JWTError
 
 from core.config import settings

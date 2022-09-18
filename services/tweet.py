@@ -1,11 +1,12 @@
 from typing import List, Any
 from fastapi import Response, HTTPException
 from starlette import status
-from core.session import SessionLocal
-from models import Tweet, User
-from schemas.user import UserAuth
 
+
+from models import Tweet, User
+from database import SessionLocal
 from services.user import user as user_service
+from schemas.user import UserAuth
 from schemas.tweet import TweetBase
 
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, ForeignKey, Integer, Boolean, String, DateTime
 from sqlalchemy.orm import relationship
-from core.base_class import Base
+from database import Base
 
 
 class Tweet(Base):

@@ -1,6 +1,5 @@
 from typing import Any, List
-from fastapi import APIRouter, Depends, Response
-from sqlmodel import Session
+from fastapi import APIRouter, Depends
 from authentication.oauth import get_current_user
 
 from schemas.tweet import TweetDisplay, TweetBase, RetweetDisplay, LikeDisplay

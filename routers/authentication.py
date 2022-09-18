@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.param_functions import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from authentication.oauth import create_access_token
-from core.session import SessionLocal
+from database import SessionLocal
 from models import User
 from utils.hash import Hash
 
