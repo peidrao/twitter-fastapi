@@ -1,1 +1,0 @@
-from models import User, Follow, Like, Tweet, Retweet
