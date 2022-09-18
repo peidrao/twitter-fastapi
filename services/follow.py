@@ -1,25 +1,31 @@
-from typing import Dict
-from sqlmodel import Session
+
+from fastapi import HTTPException
+from sqlalchemy.sql import exists
+from starlette import status
 
 from models import Follow
+from schemas.follow import FollowRequest
 from schemas.user import UserAuth
 
 from services.user import user as user_service
-from core.deps import engine
+from database import SessionLocal
 
 
 class FollowService:
-    def create(self, username: str, request_user: Dict) -> Follow:
-        with Session(engine) as session:
+    def create(self, request: FollowRequest, request_user: UserAuth) -> Follow:
+        with SessionLocal() as session:
             user = user_service.get_profile_by_id(request_user['id'])
-            user_ref = user_service.get_profile_by_username(username)
+            user_ref = user_service.get_profile_by_id(request.user_ref)
             if user and user_ref:
-                action  = Follow(user_ref=user_ref.id, user=user.id, is_blocked=False,
-                             is_muted=False, is_followed=True)
-                session.add(action)
-                session.commit()
+                if session.query(exists().where(Follow.user_id == user.id, Follow.user_ref_id == user_ref.id)).scalar():
+                    raise HTTPException(detail='you are already following this user', status_code=status.HTTP_200_OK)
 
-                return action
+                follow  = Follow(user_ref_id=user_ref.id, user_id=user.id, is_followed=True)
+                session.add(follow)
+                session.commit()
+                session.close()
+
+                return follow
 
 
 follow_service = FollowService()

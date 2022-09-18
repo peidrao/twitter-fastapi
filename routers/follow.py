@@ -1,15 +1,13 @@
-# from typing import Any
-# from fastapi import APIRouter, Depends, Response
-# from authentication.oauth import get_current_user
-# from schemas.action import FollowDisplay
-# from schemas.user import UserAuth
+from typing import Any
+from fastapi import APIRouter, Depends, Response
+from authentication.oauth import get_current_user
 
-# from services.follow import follow_service
+from schemas.user import UserAuth
+from schemas.follow import FollowRequest, FollowResponse
+from services.follow import follow_service
 
-# router = APIRouter()
+router = APIRouter()
 
-# @router.post('/{username}')
-# def follow(username: str, request_user: UserAuth = Depends(get_current_user)):
-#     action = follow_service.create(username, request_user)
-#     import pdb; pdb.set_trace()
-#     return Response({'user': action.user, 'user_ref': action.user_ref})
+@router.post('/', response_model=FollowResponse)
+def follow(request: FollowRequest, request_user: UserAuth = Depends(get_current_user)):
+    return follow_service.create(request, request_user)
