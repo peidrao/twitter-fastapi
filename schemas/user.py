@@ -32,6 +32,16 @@ class UserProfileDisplay(BaseModel):
         orm_mode = True
 
 
+class UserProfileResponse(BaseModel):
+    id: str
+    username: str
+    name: str
+    description: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
 class UserAuth(BaseModel):
     id: int
     username: str

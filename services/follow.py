@@ -2,8 +2,9 @@
 from fastapi import HTTPException
 from sqlalchemy.sql import exists
 from starlette import status
+from typing import List
 
-from models import Follow
+from models import Follow, User
 from schemas.follow import FollowRequest
 from schemas.user import UserAuth
 
@@ -26,6 +27,15 @@ class FollowService:
                 session.close()
 
                 return follow
+    
+    def get_followings(self, request: UserAuth) -> List[User]:
+        profiles = []
+        with SessionLocal() as session:
+            followings = session.query(Follow).filter(Follow.user_id == request['id']).all()
+            for profile in followings:
+                profiles.append(profile.user_ref)
+            
+        return profiles
 
 
 follow_service = FollowService()
