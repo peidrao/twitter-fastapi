@@ -33,7 +33,7 @@ class UserProfileDisplay(BaseModel):
 
 
 class UserProfileResponse(BaseModel):
-    id: str
+    id: int
     username: str
     name: str
     description: Optional[str]

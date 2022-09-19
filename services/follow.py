@@ -28,12 +28,23 @@ class FollowService:
 
                 return follow
     
-    def get_followings(self, request: UserAuth) -> List[User]:
+    def get_followings(self, username: str) -> List[User]:
         profiles = []
         with SessionLocal() as session:
-            followings = session.query(Follow).filter(Follow.user_id == request['id']).all()
+            user = user_service.get_profile_by_username(username)
+            followings = session.query(Follow).filter(Follow.user == user).all()
             for profile in followings:
                 profiles.append(profile.user_ref)
+            
+        return profiles
+
+    def get_followers(self, username: str) -> List[User]:
+        profiles = []
+        with SessionLocal() as session:
+            user = user_service.get_profile_by_username(username)
+            followers = session.query(Follow).filter(Follow.user_ref == user).all()
+            for profile in followers:
+                profiles.append(profile.user)
             
         return profiles
 
