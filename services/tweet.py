@@ -5,6 +5,8 @@ from starlette import status
 
 from models import Tweet, User
 from database import SessionLocal
+from models.user import Follow
+from routers.follow import follow
 from services.user import user as user_service
 from schemas.user import UserAuth
 from schemas.tweet import TweetBase
@@ -37,10 +39,16 @@ class TweetService:
             return Response(status_code=status.HTTP_404_NOT_FOUND)
     
     def get_all(self, request_user: UserAuth) -> List[Tweet]:
+        tweets_list = []
         with SessionLocal() as session:
             user = session.query(User).filter(User.username == request_user['username'], User.is_active == True).first()
-            tweets = session.query(Tweet).filter(Tweet.user == user, Tweet.is_active == True).all()
-            return tweets
+            tweets_list = session.query(Tweet).filter(Tweet.user == user, Tweet.is_active == True).all()
+            followings = session.query(Follow).filter(Follow.user == user).all()
+            for following in followings:
+                tweets = session.query(Tweet).filter(Tweet.user == following.user_ref, Tweet.is_active == True).all()
+                if tweets:
+                    tweets_list += tweets
+        return tweets_list
 
     def get_tweet_by_id(self, id: int) -> Tweet:
         with SessionLocal() as session:

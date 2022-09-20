@@ -49,3 +49,13 @@ class UserAuth(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UserInTweet(BaseModel):
+    id: int
+    username: str
+    name: str
+
+    class Config:
+        orm_mode = True
+    

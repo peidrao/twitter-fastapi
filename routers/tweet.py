@@ -2,13 +2,10 @@ from typing import Any, List
 from fastapi import APIRouter, Depends
 from authentication.oauth import get_current_user
 
-from schemas.tweet import TweetDisplay, TweetBase, RetweetDisplay, LikeDisplay
+from schemas.tweet import TweetDisplay, TweetBase, RetweetDisplay, LikeDisplay, TweetTimeLineResponse
 from schemas.user import UserAuth
 
 from services.tweet import tweet
-# from services.retweet import retweet
-# from services.like import like
-# from core.deps import engine
 
 
 router = APIRouter()
@@ -22,7 +19,7 @@ def create_tweet(request: TweetBase, request_user: UserAuth = Depends(get_curren
 def delete(id: int, request_user: UserAuth = Depends(get_current_user)) -> Any:
     return tweet.delete(id=id, request_user=request_user)
 
-@router.get('/', response_model=List[TweetDisplay])
+@router.get('/', response_model=List[TweetTimeLineResponse])
 async def get_tweets(request_user: UserAuth = Depends(get_current_user)) -> Any:
     return tweet.get_all(request_user=request_user)
     
