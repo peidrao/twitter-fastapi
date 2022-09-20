@@ -35,6 +35,7 @@ class UserService:
 
             if not user:
                 raise HTTPException(detail='User not found', status_code=status.HTTP_400_BAD_REQUEST)
+            
             return user
     
     def get_profile_by_id(self, id: int) -> User:

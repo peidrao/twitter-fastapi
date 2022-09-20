@@ -1,8 +1,10 @@
 
+from datetime import datetime
 from fastapi import HTTPException
 from sqlalchemy.sql import exists
 from starlette import status
-from typing import List
+from typing import List, Any
+
 
 from models import Follow, User
 from schemas.follow import FollowRequest
@@ -47,6 +49,25 @@ class FollowService:
                 profiles.append(profile.user)
             
         return profiles
+    
+
+    def create_block(self, username: str, request: UserAuth) -> Follow:
+        follow: Any = None
+        with SessionLocal() as session:
+            user_ref = user_service.get_profile_by_username(username)
+    
+            if ses1sion.query(exists().where(Follow.user_id == request.get('id'), Follow.user_ref_id == user_ref.id)).scalar():
+                follow = session.query(Follow).filter(Follow.user_id == request.get('id'), Follow.user_ref_id == user_ref.id).first()
+                follow.is_followed = False
+                follow.is_blocked = True
+                follow.updated_at = datetime.now()
+            else:
+                follow = Follow(user_ref_id=user_ref.id, user_id=user.id, is_blocked=True)
+                session.add(follow)
+            session.commit()
+        
+        return follow
+
 
 
 follow_service = FollowService()
