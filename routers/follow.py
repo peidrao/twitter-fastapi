@@ -28,3 +28,8 @@ def followers(username: str):
 @router.patch('/{username}/block', response_model=FollowResponse)
 def block(username: str, request: UserAuth = Depends(get_current_user)):
     return follow_service.create_block(username, request)
+
+
+@router.patch('/{username}/unblock', response_model=FollowResponse)
+def unblock(username: str, request: UserAuth = Depends(get_current_user)):
+    return follow_service.unblock(username, request)
