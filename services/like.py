@@ -1,44 +1,24 @@
 from fastapi import  HTTPException
-
-from sqlmodel import Session
-
+from database.session import SessionLocal
+from starlette import status
 from models import Like
+from models.tweet import Tweet
 from schemas.user import UserAuth
-from schemas.tweet import LikeBase
-
+from services.tweet import tweet as tweet_service
 from services.user import user as user_service
-# from core.deps import engine
 
 
-# class LikeService:
-#     def create(self, request: LikeBase, request_user: UserAuth) -> Like:
-#         with Session(engine) as session:
-#             user = user_service.get_profile_by_id(request_user.id)
+class LikeService:
+    def create(self, tweet_id: int, request_user: UserAuth) -> Like:
+        with SessionLocal() as session:
+            user = user_service.get_profile_by_id(request_user['id'])
+            tweet =tweet_service.get_tweet_by_id(tweet_id)
+            if session.query(Like).filter(Like.tweet_id == tweet_id, Like.user_id == user.id).first():
+                raise HTTPException(detail='You already liked this tweet', status_code=status.HTTP_400_BAD_REQUEST)
+            like = Like(tweet_id=tweet.id, user_id=user.id, is_active=True)
             
-#             like = session.query(Like).filter(Like.tweet == request.tweet, Like.user == user.id).first()
+            session.add(like)
+            session.commit()
+            return like
 
-#             if like:
-#                 if not like.is_active:
-#                     like.is_active = True
-#                 else:
-#                     like.is_active = False
-
-#                 session.commit()
-#                 session.refresh(like)
-#                 return like
-
-#             if user:
-#                 like = Like(
-#                     user=user.id,
-#                     tweet=request.tweet
-#                 )
-
-#                 session.add(like)
-#                 session.commit()
-#                 session.refresh(like)
-#                 return like
-        
-#             raise HTTPException(detail='User not exists', status_code=404)
-
-
-# like = LikeService()
+like = LikeService()
