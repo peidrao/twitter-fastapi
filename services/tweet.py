@@ -6,7 +6,6 @@ from starlette import status
 from models import Tweet, User
 from database import SessionLocal
 from models.user import Follow
-from routers.follow import follow
 from services.user import user as user_service
 from schemas.user import UserAuth
 from schemas.tweet import TweetBase
@@ -48,6 +47,10 @@ class TweetService:
                 tweets = session.query(Tweet).filter(Tweet.user == following.user_ref, Tweet.is_active == True).all()
                 if tweets:
                     tweets_list += tweets
+        
+        if tweets_list:
+            tweets_list.sort(key=lambda x: x.created_at, reverse=True)
+
         return tweets_list
 
     def get_tweet_by_id(self, id: int) -> Tweet:

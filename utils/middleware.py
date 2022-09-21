@@ -4,7 +4,7 @@ from starlette import status
 from authentication.oauth import get_current_user
 
 from database import SessionLocal
-from models import User, Follow
+from models import Follow
 from schemas.user import UserAuth
 from services.user import user as user_service
 
