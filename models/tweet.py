@@ -21,6 +21,12 @@ class Tweet(Base):
     def likes(self):
         with SessionLocal() as session:
             return session.query(Like).filter(Like.tweet_id == self.id, Like.is_active == True).count()
+    
+    @hybrid_property
+    def retweets(self):
+        with SessionLocal() as session:
+            return session.query(Retweet).filter(Retweet.tweet_id == self.id, Retweet.is_active == True).count()
+
 
 
 class Like(Base):
