@@ -20,7 +20,7 @@ class Tweet(Base):
     @hybrid_property
     def likes(self):
         with SessionLocal() as session:
-            return session.query(Like).filter(Like.tweet_id == self.id).count()
+            return session.query(Like).filter(Like.tweet_id == self.id, Like.is_active == True).count()
 
 
 class Like(Base):
